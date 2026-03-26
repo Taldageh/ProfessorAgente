@@ -6,6 +6,7 @@ from agno.models.google import Gemini
 from agno.db.sqlite import SqliteDb
 from dotenv import load_dotenv
 from pydantic import BaseModel
+from fastapi.responses import HTMLResponse
 import os
 import uvicorn
 
@@ -204,6 +205,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@base_app.get("/", response_class=HTMLResponse)
+async def home():
+    with open("teste.html", "r", encoding="utf-8") as f:
+        return f.read()
 
 if __name__ == "__main__":
     import uvicorn

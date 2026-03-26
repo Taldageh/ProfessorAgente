@@ -1,4 +1,4 @@
-    const AGENT_API_BASE = "http://localhost:7777";
+    const AGENT_API_BASE = "";
     const AGENT_ID = "professor-programacao";
     const USER_ID = "usuario-web";
 
