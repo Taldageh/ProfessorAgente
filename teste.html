@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seu Robo - Seu programador</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">
+            <div class="logo-icon">R</div>
+            <div class="logo-text">Seu Programador</div>
+        </div>
+
+        <button class="new-chat-btn" onclick="newChat()">
+            <span>+</span> Novo Chat
+        </button>
+
+        <div class="history-section">
+            <div class="history-title">Histórico Recente</div>
+            <div id="chatHistory"></div>
+        </div>
+
+        <div class="user-section">
+            <div class="user-profile">
+                <div class="user-avatar">U</div>
+                <div>
+                    <div style="font-weight: 600; font-size: 14px;">Usuário</div>
+                    <div style="font-size: 12px; color: var(--text-muted);">Pro Plan</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="top-bar">
+            <div class="model-selector">
+                <span>⚡</span>
+                <span>Neural GPT-4</span>
+                <span>▼</span>
+            </div>
+            <div class="top-actions">
+                <button class="icon-btn" title="Compartilhar">🔗</button>
+                <button class="icon-btn" title="Configurações">⚙️</button>
+            </div>
+        </div>
+
+        <div class="chat-container" id="chatContainer"></div>
+
+        <div class="input-container">
+            <div class="input-wrapper">
+                <div class="input-box">
+                    <textarea
+                        class="input-field"
+                        id="userInput"
+                        placeholder="Digite sua mensagem..."
+                        rows="1"
+                        oninput="autoResize(this)"
+                        onkeydown="handleKeyDown(event)"
+                    ></textarea>
+                    <div class="input-actions">
+                        <button class="input-btn" title="Anexar arquivo">📎</button>
+                        <button class="input-btn send-btn" id="sendBtn" onclick="sendMessage()" title="Enviar">
+                            ➤
+                        </button>
+                    </div>
+                </div>
+                <div class="input-footer">
+                    Seu Robo pode cometer erros. Considere verificar informações importantes.
+                </div>
+            </div>
+        </div>
+    </main>
+
+<script src="script.js"></script>
+</body>
+</html>
