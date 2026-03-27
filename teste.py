@@ -7,6 +7,7 @@ from agno.db.sqlite import SqliteDb
 from dotenv import load_dotenv
 from pydantic import BaseModel
 from fastapi.responses import HTMLResponse
+from pathlib import Path
 import os
 import uvicorn
 
@@ -206,10 +207,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+BASE_DIR = Path(__file__).resolve().parent
+
 @base_app.get("/", response_class=HTMLResponse)
 async def home():
-    with open("teste.html", "r", encoding="utf-8") as f:
-        return f.read()
+    file_path = BASE_DIR / "teste.html"
+
+    if not file_path.exists():
+        return HTMLResponse(
+            content="<h1>Erro: teste.html não encontrado</h1>",
+            status_code=500
+        )
+
+    return HTMLResponse(
+        content=file_path.read_text(encoding="utf-8"),
+        status_code=200
+    )
 
 if __name__ == "__main__":
     import uvicorn
