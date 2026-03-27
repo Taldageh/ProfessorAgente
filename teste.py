@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from agno.agent import Agent
 from agno.models.groq import Groq
 from agno.models.google import Gemini
@@ -14,6 +15,7 @@ import uvicorn
 load_dotenv()
 
 base_app = FastAPI()
+BASE_DIR = Path(__file__).resolve().parent
 
 if not os.getenv("GROQ_API_KEY"):
     raise RuntimeError("GROQ_API_KEY não encontrada no .env")
@@ -64,22 +66,29 @@ async def health():
 def choose_provider(message: str) -> str:
     text = message.lower()
 
-    if any(word in text for word in ["analise profundamente", "explique em profundidade", "compare abordagens", "arquitetura"]):
+    if any(word in text for word in [
+        "analise profundamente",
+        "explique em profundidade",
+        "compare abordagens",
+        "arquitetura"
+    ]):
         return "gemini"
 
-    if any(word in text for word in ["python", "javascript", "código", "api", "bug", "erro", "sql"]):
+    if any(word in text for word in [
+        "python",
+        "javascript",
+        "código",
+        "api",
+        "bug",
+        "erro",
+        "sql"
+    ]):
         return "groq"
 
     return "groq"
 
 
 def build_session_id(provider: str, raw_session_id: str | None) -> str:
-    """
-    Garante que cada provider tenha sua própria sessão.
-    Exemplo:
-    groq::chat-abc123
-    gemini::chat-abc123
-    """
     base_session = (raw_session_id or "default-session").strip()
     return f"{provider}::{base_session}"
 
@@ -104,7 +113,7 @@ def create_groq_agent() -> Agent:
 def create_gemini_agent() -> Agent:
     return Agent(
         id="professor-programacao-gemini",
-        name="Professor de programação Gemini",
+        name="Professor especializado em computação usando Gemini.",
         model=Gemini(id="gemini-2.0-flash-001"),
         db=get_db(),
         instructions=INSTRUCTIONS,
@@ -207,7 +216,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-BASE_DIR = Path(__file__).resolve().parent
+# Serve arquivos estáticos: style.css, script.js, imagens etc.
+app.mount("/static", StaticFiles(directory=BASE_DIR), name="static")
+
 
 @base_app.get("/", response_class=HTMLResponse)
 async def home():
@@ -224,6 +235,6 @@ async def home():
         status_code=200
     )
 
+
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run("teste:app", host="0.0.0.0", port=8000)
